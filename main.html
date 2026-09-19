@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,87 +6,84 @@
     <title>Tic Tac Toe</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
         }
 
         .container {
-            width: 100%;
-            max-width: 500px;
-            margin: 50px auto;
             text-align: center;
+            width: 100%;
         }
 
-        h1 {
-            margin-bottom: 20px;
+        /* Starting page */
+        #start {
+            margin-top: 50px;
+        }
+
+        #start h1 {
+            font-size: 40px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
+            width: 300px;
+            margin: 30px auto;
             gap: 15px;
-            margin-top: 30px;
         }
 
-        input {
+        .form-group input {
             padding: 12px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
 
         #submit {
             padding: 12px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
+            background-color: black;
             color: white;
+            border: none;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        #submit:hover {
-            background-color: #0056b3;
-        }
-
+        /* Game page */
         #game {
             display: none;
         }
 
-        .message {
-            font-size: 20px;
-            margin: 20px 0;
+        #game h1 {
+            font-family: cursive;
+            font-size: 48px;
             font-weight: bold;
+            margin: 10px 0 20px;
+        }
+
+        .message {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
         }
 
         .board {
+            width: 470px;
+            height: 470px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
-            justify-content: center;
-            margin: 20px auto;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
         }
 
         .cell {
-            width: 100px;
-            height: 100px;
-            border: 2px solid black;
+            background-color: pink;
+            border: 1px solid black;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
+            font-size: 70px;
+            font-family: cursive;
             font-weight: bold;
             cursor: pointer;
-        }
-
-        .cell:hover {
-            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -96,69 +92,74 @@
 
     <div class="container">
 
-        <!-- Player Name Form -->
+        <!-- Initial Page -->
         <div id="start">
+
             <h1>Tic Tac Toe</h1>
 
             <div class="form-group">
-                <input type="text" id="player-1" placeholder="Enter Player 1 Name">
-
-                <input type="text" id="player-2" placeholder="Enter Player 2 Name">
+                <input type="text" id="player-1" placeholder="Player 1 Name">
+                <input type="text" id="player-2" placeholder="Player 2 Name">
 
                 <button id="submit">Start Game</button>
             </div>
+
         </div>
 
-        <!-- Game -->
+
+        <!-- Game Page -->
         <div id="game">
+
             <h1>Tic Tac Toe</h1>
 
             <div class="message"></div>
 
             <div class="board">
+
                 <div class="cell" id="1"></div>
                 <div class="cell" id="2"></div>
                 <div class="cell" id="3"></div>
+
                 <div class="cell" id="4"></div>
                 <div class="cell" id="5"></div>
                 <div class="cell" id="6"></div>
+
                 <div class="cell" id="7"></div>
                 <div class="cell" id="8"></div>
                 <div class="cell" id="9"></div>
+
             </div>
+
         </div>
 
     </div>
 
+
     <script>
-        const player1Input = document.getElementById("player-1");
-        const player2Input = document.getElementById("player-2");
+
+        let player1 = "";
+        let player2 = "";
+
+        let currentPlayer = 1;
+
+        let board = ["", "", "", "", "", "", "", "", ""];
+
+        let gameOver = false;
+
         const submit = document.getElementById("submit");
 
         const start = document.getElementById("start");
         const game = document.getElementById("game");
 
+        const player1Input = document.getElementById("player-1");
+        const player2Input = document.getElementById("player-2");
+
         const message = document.querySelector(".message");
+
         const cells = document.querySelectorAll(".cell");
 
-        let player1 = "";
-        let player2 = "";
-        let currentPlayer = 1;
-        let gameOver = false;
 
-        let board = ["", "", "", "", "", "", "", "", ""];
-
-        const winningPatterns = [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9],
-            [1, 4, 7],
-            [2, 5, 8],
-            [3, 6, 9],
-            [1, 5, 9],
-            [3, 5, 7]
-        ];
-
+        // Start game
         submit.addEventListener("click", function () {
 
             player1 = player1Input.value.trim();
@@ -175,55 +176,104 @@
             message.textContent = player1 + ", you're up";
         });
 
+
+        // Cell click
         cells.forEach(function (cell) {
 
             cell.addEventListener("click", function () {
 
-                if (gameOver || cell.textContent !== "") {
+                // Don't allow clicking an already-filled cell
+                if (cell.textContent !== "" || gameOver) {
                     return;
                 }
 
                 let id = Number(cell.id);
 
+                // Player 1
                 if (currentPlayer === 1) {
+
                     cell.textContent = "X";
                     board[id] = "X";
-                } else {
+
+                }
+
+                // Player 2
+                else {
+
                     cell.textContent = "O";
                     board[id] = "O";
+
                 }
 
+
+                // Check winner
                 if (checkWinner()) {
-                    let winner;
 
                     if (currentPlayer === 1) {
-                        winner = player1;
-                    } else {
-                        winner = player2;
+                        message.textContent =
+                            player1 + " congratulations you won!";
+                    }
+                    else {
+                        message.textContent =
+                            player2 + " congratulations you won!";
                     }
 
-                    message.textContent = winner + " congratulations you won!";
                     gameOver = true;
+
                     return;
                 }
 
-                if (isDraw()) {
+
+                // Check draw
+                if (checkDraw()) {
+
                     message.textContent = "It's a draw!";
+
                     gameOver = true;
+
                     return;
                 }
 
+
+                // Change player
                 if (currentPlayer === 1) {
+
                     currentPlayer = 2;
+
                     message.textContent = player2 + ", you're up";
-                } else {
-                    currentPlayer = 1;
-                    message.textContent = player1 + ", you're up";
+
                 }
+                else {
+
+                    currentPlayer = 1;
+
+                    message.textContent = player1 + ", you're up";
+
+                }
+
             });
+
         });
 
+
+        // Winning combinations
         function checkWinner() {
+
+            const winningPatterns = [
+
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+
+                [1, 5, 9],
+                [3, 5, 7]
+
+            ];
+
 
             for (let i = 0; i < winningPatterns.length; i++) {
 
@@ -236,23 +286,28 @@
                 if (a !== "" && a === b && b === c) {
                     return true;
                 }
+
             }
 
             return false;
         }
 
-        function isDraw() {
+
+        // Draw
+        function checkDraw() {
 
             for (let i = 1; i <= 9; i++) {
+
                 if (board[i] === "") {
                     return false;
                 }
+
             }
 
             return true;
         }
+
     </script>
 
 </body>
 </html>
-```
